@@ -22,13 +22,13 @@ function createMap(data, geoData) {
         if (loc) {
             let point = [loc.coordinates[1], loc.coordinates[0]];
             let marker = L.marker(point);
-            let popup = `<h2>${row.properties.title}</h2>`;
+            let popup = `<h2>Magnitude: ${row.properties.mag}</h2><br><h3>${row.properties.place}</h3><br><h3>Depth: ${row.geometry.coordinates[2]}`;
             marker.bindPopup(popup);
             markers.addLayer(marker);
 
             // circle markers
             let circleMarker = L.circle(point, {
-                fillOpacity: 0.8,
+                fillOpacity: 0.9,
                 color: colorSelect(loc.coordinates[2]),
                 fillColor: colorSelect(loc.coordinates[2]),
                 radius: circleSize(row.properties.mag)
@@ -56,8 +56,8 @@ function createMap(data, geoData) {
     };
 
     let overlayLayers = {
-        Markers: markers,
         Circles: circleLayer,
+        Markers: markers,
         "Tectonic Plates": geo_layer
     };
 
@@ -65,7 +65,7 @@ function createMap(data, geoData) {
     let myMap = L.map("map", {
         center: [40, -94],
         zoom: 4,
-        layers: [street, markers, geo_layer]
+        layers: [street, circleLayer, geo_layer]
     });
 
     // step 5: layer control filters and legend
@@ -113,7 +113,7 @@ function circleSize(mag) {
     let radius = 1;
 
      if (mag > 0) {
-        radius = mag ** 8;
+        radius = mag ** 7.5;
   }
 
   return radius
